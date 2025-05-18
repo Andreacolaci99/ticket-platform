@@ -16,46 +16,66 @@
 
 <body id="body-admin">
     <div style="text-align: center; margin-top: 5%; margin-bottom: 2%;">
-        <h1 id="h1-admin" th:text="IDROARTIGIANI"></h1>
+        <h1 id="h1-admin" th:text="'IDROARTIGIANI'"></h1>
+        <h2 id="h2-admin" th:text="'LISTA TASK'"></h2>
     </div>
-
-    <div class="container p-4" style="background-color: blue; border-radius: 8px;">
-        <div th:if="${tickets.isEmpty()}" id="no-ticket">
-            <p>Non ci sono ticket al momento</p>
+    <div class="container">
+        <div class="row">
+            <div class="col col-4">
+                <div class="card" style="width: 18rem;" th:object="${utente}">
+                    <img th:src="*{url}" class="card-img-top" alt="200" width="200">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="*{nome}"></h5>
+                        <h5 class="card-title" th:text="*{cognome}"></h5>
+                        <p class="card-text"><span sec:authentication="principal.authorities"></span></p>
+                        <p class="card-text" th:text="*{dataNascita}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-8">
+                <div class="container p-4" style="background-color: blue; border-radius: 8px;">
+                    <div th:if="${tickets.isEmpty()}" id="no-ticket">
+                        <p>Non ci sono ticket al momento</p>
+                    </div>
+                    <div th:unless="${tickets.isEmpty()}" class="container text-center">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-4">Nome</th>
+                                    <th class="col-3">Data Creazione</th>
+                                    <th class="col-3">Dettaglio</th>
+                                    <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Modifica</th>
+                                    <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Cancella</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ticket : ${tickets}">
+                                    <td th:text="${ticket.name}"></td>
+                                    <td th:text="${ticket.dataCreazione}"></td>
+                                    <td><a type="button" class="btn btn-light"
+                                            th:href="@{|/idraulica/ticket/${ticket.id}|}"><i
+                                                class="bi bi-card-list"></i></a></td>
+                                    <td sec:authorize="hasAuthority('ADMIN')"><a type="button" class="btn btn-light"
+                                            th:href="@{|/idraulica/edit/${ticket.id}|}"><i class="bi bi-pen"></i></a>
+                                    </td>
+                                    <td sec:authorize="hasAuthority('ADMIN')">
+                                        <form action="#" th:action="@{|/delete/${ticket.id}|}" method="post">
+                                            <button type="submit" class="btn btn-danger"
+                                                onclick="return confirm('Sei sicuro di voler cancellare il ticket ?')"><i
+                                                    class="bi bi-recycle"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div th:unless="${tickets.isEmpty()}" class="container text-center">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="col-4">Nome</th>
-                        <th class="col-3">Data Creazione</th>
-                        <th class="col-3">Dettaglio</th>
-                        <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Modifica</th>
-                        <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Cancella</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="ticket : ${tickets}">
-                        <td th:text="${ticket.name}"></td>
-                        <td th:text="${ticket.dataCreazione}"></td>
-                        <td><a type="button" class="btn btn-light" th:href="@{|/idraulica/${ticket.id}|}"><i
-                                    class="bi bi-card-list"></i></a></td>
-                        <td sec:authorize="hasAuthority('ADMIN')"><a type="button" class="btn btn-light"
-                                th:href="@{|/idraulica/edit/${ticket.id}|}"><i class="bi bi-pen"></i></a></td>
-                        <td sec:authorize="hasAuthority('ADMIN')">
-                            <form action="#" th:action="@{|/delete/${ticket.id}|}" method="post">
-                                <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Sei sicuro di voler cancellare il ticket ?')"><i
-                                        class="bi bi-recycle"></i></button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                crossorigin="anonymous"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

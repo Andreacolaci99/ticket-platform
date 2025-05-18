@@ -1,4 +1,5 @@
-#body-admin {
+#body-admin, #body-editTask, 
+#body-dettaglioTicket, #body-creaTask {
     background-image: url('/img/Idraulica.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -6,7 +7,7 @@
     min-height: 100vh;
 }
 
-#h1-admin {
+#h1-admin, #h2-admin{
     color: blue;
     font-size: 3rem;
     text-align: center;

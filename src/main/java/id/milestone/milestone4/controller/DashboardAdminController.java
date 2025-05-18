@@ -1,5 +1,6 @@
 package id.milestone.milestone4.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import id.milestone.milestone4.model.Ticket;
+import id.milestone.milestone4.model.Utenti;
 import id.milestone.milestone4.repository.TicketRepository;
+import id.milestone.milestone4.repository.UtentiRepository;
 import jakarta.validation.Valid;
-
-
-
 
 @Controller
 @RequestMapping("/")
@@ -27,10 +27,27 @@ public class DashboardAdminController {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private UtentiRepository utentiRepository;
+
+    @GetMapping("/")
+    public String homeRedirect() {
+        return "redirect:/idraulica";
+    }
+
     @GetMapping("/idraulica")
-    public String homeAdmin(Model model, @RequestParam(name="keyword", required=false) String name) {
-        
+    public String homeAdmin(Model model, @RequestParam(name = "keyword", required = false) String name,
+            Principal principal) {
+
         List<Ticket> listaTicket;
+
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        String username = principal.getName();
+        Utenti utente = utentiRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
         if (name != null && !name.isBlank()) {
             listaTicket = ticketRepository.findByNameContainingIgnoreCase(name);
@@ -38,10 +55,11 @@ public class DashboardAdminController {
             listaTicket = ticketRepository.findAll();
         }
         model.addAttribute("tickets", listaTicket);
+        model.addAttribute("utente", utente);
         return "/admin/index";
     }
-    
-    @GetMapping("/idraulica/{id}")
+
+    @GetMapping("/idraulica/ticket/{id}")
     public String dettaglioTask(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("ticket", ticketRepository.findById(id).get());
         return "/admin/dettaglioTicket";
@@ -53,14 +71,15 @@ public class DashboardAdminController {
         model.addAttribute("tickets", ticketRepository.findAll());
         return "/admin/creaTask";
     }
-    
+
     @PostMapping("/idraulica/create")
-    public String postCreate(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
-        
-        if(bindingResult.hasErrors()){
+    public String postCreate(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
             return "/admin/creaTask";
         }
-        
+
         ticketRepository.save(formTicket);
         return "redirect:/idraulica";
     }
@@ -68,7 +87,7 @@ public class DashboardAdminController {
     @GetMapping("/idraulica/edit/{id}")
     public String editTask(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("ticket", ticketRepository.findById(id).get());
-    
+
         return "/admin/editTask";
     }
 
@@ -83,12 +102,12 @@ public class DashboardAdminController {
 
         return "redirect:/idraulica";
     }
-    
-   @PostMapping("/delete/{id}")
+
+    @PostMapping("/delete/{id}")
     public String deleteTask(@PathVariable("id") Integer id) {
 
         ticketRepository.deleteById(id);
         return "redirect:/idraulica";
     }
-    
+
 }

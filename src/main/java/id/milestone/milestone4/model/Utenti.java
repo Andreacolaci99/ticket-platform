@@ -30,7 +30,7 @@ public class Utenti {
 
     @NotNull(message="Inserire una data valida")
     @DateTimeFormat(pattern="yyyy-MM-dd")
-    @Column(name="Data di nascita")
+    @Column(name="Data_di_nascita")
     private LocalDate dataNascita;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -38,6 +38,30 @@ public class Utenti {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Ticket> tickets;
+
+    private String url;
+
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String password;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Integer getId() {
         return id;
@@ -85,6 +109,14 @@ public class Utenti {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }
