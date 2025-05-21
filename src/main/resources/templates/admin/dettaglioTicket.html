@@ -15,18 +15,35 @@
 </div>
 
 <body id="body-dettaglioTicket">
-    <div class="container">
-        <h1 th:text="${ticket.name}"></h1>
-        <h2 th:text="|Creata da ${ticket.autore}|"></h2>
-        <h3 th:text="|Cosa va fatto : ${ticket.descrizione}|"></h3>
-        <p th:text="|Note : ${ticket.note}|"></p>
-        <h4>
-            <span class="badge bg-danger" th:if="${ticket.stato == 'DA FARE'}">🔴 DA FARE</span>
-            <span class="badge bg-warning text-dark" th:if="${ticket.stato == 'IN CORSO'}">🟡 IN CORSO</span>
-            <span class="badge bg-success" th:if="${ticket.stato == 'COMPLETATO'}">🟢 COMPLETATO</span>
-        </h4>
-        <span th:text="|Creazione in data: ${ticket.dataCreazione}|"></span>
+    <div id="body-dettaglioTicket" class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="container bg-white p-4 rounded shadow">
+            <div class="row">
+                <div class="col-8">
+                    <h1 th:text="${ticket.name}"></h1>
+                    <h2 th:text="|Creata da ${ticket.autore}|"></h2>
+                    <h3 th:text="|Lavoro da fare : ${ticket.descrizione}|"></h3>
+                    <p th:text="|Note : ${ticket.note}|"></p>
+                    <h4>
+                        <span class="badge bg-danger" th:if="${ticket.stato == 'DA FARE'}">🔴 DA FARE</span>
+                        <span class="badge bg-warning text-dark" th:if="${ticket.stato == 'IN CORSO'}">🟡 IN
+                            CORSO</span>
+                        <span class="badge bg-success" th:if="${ticket.stato == 'COMPLETATO'}">🟢 COMPLETATO</span>
+                    </h4>
+                    <span th:text="|Creazione in data: ${ticket.dataCreazione}|"></span>
+                    <br>
+                    <span th:text="|Assegnata a : ${ticket.utente.nome + ' ' + ticket.utente.cognome}|"></span>
+                </div>
+                <div class="col-4">
+                    <h4>
+                        <strong>Categorie</strong>
+                    </h4>
+                    <ul>
+                        <li th:each="cat : ${ticket.categorie}" th:text="${cat.nome}"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
+    </div>
 
 </html>

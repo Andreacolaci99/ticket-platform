@@ -1,5 +1,7 @@
-#body-admin, #body-editTask, 
-#body-dettaglioTicket, #body-creaTask {
+#body-admin,
+#body-editTask,
+#body-dettaglioTicket,
+#body-creaTask {
     background-image: url('/img/Idraulica.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -7,14 +9,15 @@
     min-height: 100vh;
 }
 
-#h1-admin, #h2-admin{
+#h1-admin,
+#h2-admin {
     color: blue;
     font-size: 3rem;
     text-align: center;
     font-weight: bold;
 }
 
-#no-ticket{
+#no-ticket {
     background-color: blue;
     color: white;
     width: 70%;
@@ -32,4 +35,12 @@
 .navbar .nav-link,
 .navbar .navbar-brand {
     color: blue !important;
+}
+
+#fotoUtente {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
 }

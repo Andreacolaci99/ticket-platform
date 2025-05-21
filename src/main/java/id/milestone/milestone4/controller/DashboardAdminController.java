@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import id.milestone.milestone4.model.Ticket;
 import id.milestone.milestone4.model.Utenti;
+import id.milestone.milestone4.repository.CategorieRepository;
 import id.milestone.milestone4.repository.TicketRepository;
 import id.milestone.milestone4.repository.UtentiRepository;
 import jakarta.validation.Valid;
@@ -30,6 +31,9 @@ public class DashboardAdminController {
     @Autowired
     private UtentiRepository utentiRepository;
 
+    @Autowired
+    private CategorieRepository categorieRepository;
+
     @GetMapping("/")
     public String homeRedirect() {
         return "redirect:/idraulica";
@@ -39,8 +43,6 @@ public class DashboardAdminController {
     public String homeAdmin(Model model, @RequestParam(name = "keyword", required = false) String name,
             Principal principal) {
 
-        List<Ticket> listaTicket;
-
         if (principal == null) {
             return "redirect:/login";
         }
@@ -49,11 +51,24 @@ public class DashboardAdminController {
         Utenti utente = utentiRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
+        boolean isAdmin = utente.getRuolo() != null && utente.getRuolo().getNome().equalsIgnoreCase("ADMIN");
+
+        List<Ticket> listaTicket;
+
         if (name != null && !name.isBlank()) {
-            listaTicket = ticketRepository.findByNameContainingIgnoreCase(name);
+            if (isAdmin) {
+                listaTicket = ticketRepository.findByNameContainingIgnoreCase(name);
+            } else {
+                listaTicket = ticketRepository.findByUtenteAndNameContainingIgnoreCase(utente, name);
+            }
         } else {
-            listaTicket = ticketRepository.findAll();
+            if (isAdmin) {
+                listaTicket = ticketRepository.findAll();
+            } else {
+                listaTicket = ticketRepository.findByUtente(utente);
+            }
         }
+
         model.addAttribute("tickets", listaTicket);
         model.addAttribute("utente", utente);
         return "/admin/index";
@@ -69,6 +84,8 @@ public class DashboardAdminController {
     public String createNewTask(Model model) {
         model.addAttribute("ticket", new Ticket());
         model.addAttribute("tickets", ticketRepository.findAll());
+        model.addAttribute("categorie",categorieRepository.findAll());
+        model.addAttribute("utenti", utentiRepository.findAll());
         return "/admin/creaTask";
     }
 
@@ -77,6 +94,7 @@ public class DashboardAdminController {
             Model model) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categorie",categorieRepository.findAll());
             return "/admin/creaTask";
         }
 

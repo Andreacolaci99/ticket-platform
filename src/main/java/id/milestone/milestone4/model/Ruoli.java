@@ -4,50 +4,49 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Ruoli {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-     @NotBlank(message="Inserire un nome valido")
-     private String nome;
+    @NotBlank(message = "Inserire un nome valido")
+    private String nome;
 
-     @ManyToMany(mappedBy="ruoli")
-     @JsonBackReference
-     private List<Utenti> utenti;
+    @OneToMany(mappedBy = "ruolo")
+    @JsonBackReference
+    private List<Utenti> utenti;
 
-     public Integer getId() {
-         return id;
-     }
+    public List<Utenti> getUtenti() {
+        return utenti;
+    }
 
-     public void setId(Integer id) {
-         this.id = id;
-     }
+    public void setUtenti(List<Utenti> utenti) {
+        this.utenti = utenti;
+    }
 
-     public String getNome() {
-         return nome;
-     }
+    public Integer getId() {
+        return id;
+    }
 
-     public void setNome(String nome) {
-         this.nome = nome;
-     }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-     public List<Utenti> getUtenti() {
-         return utenti;
-     }
+    public String getNome() {
+        return nome;
+    }
 
-     public void setUtenti(List<Utenti> utenti) {
-         this.utenti = utenti;
-     }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-     
 }

@@ -11,7 +11,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,21 +24,30 @@ public class Utenti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message="Inserire un nome valido")
+    @NotBlank(message = "Inserire un nome valido")
     private String nome;
 
-    @NotBlank(message="Inserire un cognome valido")
+    @NotBlank(message = "Inserire un cognome valido")
     private String cognome;
 
-    @NotNull(message="Inserire una data valida")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    @Column(name="Data_di_nascita")
+    @NotNull(message = "Inserire una data valida")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "Data_di_nascita")
     private LocalDate dataNascita;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Ruoli> ruoli;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ruolo_id")
+    private Ruoli ruolo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    public Ruoli getRuolo() {
+        return ruolo;
+    }
+
+    public void setRuolo(Ruoli ruolo) {
+        this.ruolo = ruolo;
+    }
+
+    @OneToMany(mappedBy = "utente")
     private List<Ticket> tickets;
 
     private String url;
@@ -93,14 +104,6 @@ public class Utenti {
 
     public void setDataNascita(LocalDate dataNascita) {
         this.dataNascita = dataNascita;
-    }
-
-    public List<Ruoli> getRuoli() {
-        return ruoli;
-    }
-
-    public void setRuoli(List<Ruoli> ruoli) {
-        this.ruoli = ruoli;
     }
 
     public List<Ticket> getTickets() {

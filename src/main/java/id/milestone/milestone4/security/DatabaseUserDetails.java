@@ -16,16 +16,18 @@ public class DatabaseUserDetails implements UserDetails {
     private final Integer id;
     private final String username;
     private final String password;
-    private final List<GrantedAuthority> authorities;
+    private List<GrantedAuthority> authorities;
 
     public DatabaseUserDetails(Utenti utente) {
         this.id = utente.getId();
         this.username = utente.getUsername();
         this.password = utente.getPassword();
         this.authorities = new ArrayList<>();
-        for (Ruoli ruolo : utente.getRuoli()) {
-            this.authorities.add(new SimpleGrantedAuthority(ruolo.getNome()));
+        Ruoli ruolo = utente.getRuolo();
+        if (ruolo != null) {
+            this.authorities = List.of(new SimpleGrantedAuthority(ruolo.getNome()));
         }
+
     }
 
     @Override

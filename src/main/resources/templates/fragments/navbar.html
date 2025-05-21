@@ -3,6 +3,7 @@
     <div class="d-flex align-items-center">
       <a class="navbar-brand me-3" th:href="@{/idraulica}">Home</a>
       <a class="nav-link" th:href="@{/idraulica/create}" sec:authorize="hasAuthority('ADMIN')">Assegna nuova task</a>
+      <a class="nav-link ms-4" th:href="@{/categorie}" sec:authorize="hasAuthority('ADMIN')">Crea categoria</a>
     </div>
     <form class="d-flex" role="search" th:action="@{/idraulica}" method="get">
       <input class="form-control me-2" type="search" name="keyword" placeholder="Search task" aria-label="Search" />

@@ -15,7 +15,8 @@ public class SecurityConfiguration {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/idraulica/create", "/idraulica/edit/**", "/delete/**").hasAuthority("ADMIN")
+                .requestMatchers("/idraulica/create", "/delete/**").hasAuthority("ADMIN")
+                .requestMatchers("/idraulica/edit/**").hasAnyAuthority("ADMIN", "OPERATORE")
                 .requestMatchers("/idraulica/**").authenticated() // Protegge tutta l'area idraulica
                 .anyRequest().permitAll() 
                 .and()

@@ -2,10 +2,10 @@ package id.milestone.milestone4.model;
 
 import java.util.List;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 
@@ -30,7 +30,7 @@ public class Categorie {
         this.id = id;
     }
 
-    public String getNome() {
+    public String getNome() {   
         return nome;
     }
 

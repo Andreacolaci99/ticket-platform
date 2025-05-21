@@ -10,7 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,10 +27,10 @@ public class Ticket {
     @Column(name="Titolo ticket")
     private String name;
 
-    @NotBlank
+    @NotBlank(message="Inserire il nome dell' autore")
     private String autore;
 
-    @NotBlank
+    @NotBlank(message="Inserire la descrizione del ticket")
     @Column(length=1000)
     private String descrizione;
 
@@ -43,8 +45,17 @@ public class Ticket {
     @NotBlank
     private String stato;
 
-    @ManyToMany(mappedBy="tickets")
-    private List<Utenti> utenti;
+    @ManyToOne
+    @JoinColumn(name = "utente_id")
+    private Utenti utente;
+
+    public Utenti getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utenti utente) {
+        this.utente = utente;
+    }
 
     @ManyToMany
     private List<Categorie> categorie;
@@ -55,14 +66,6 @@ public class Ticket {
 
     public void setCategorie(List<Categorie> categorie) {
         this.categorie = categorie;
-    }
-
-    public List<Utenti> getUtenti() {
-        return utenti;
-    }
-
-    public void setUtenti(List<Utenti> utenti) {
-        this.utenti = utenti;
     }
 
     public Integer getId() {

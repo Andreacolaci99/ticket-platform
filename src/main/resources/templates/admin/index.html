@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <link rel="stylesheet" th:href="@{/css/application.css}" />
@@ -23,7 +24,7 @@
         <div class="row">
             <div class="col col-4">
                 <div class="card" style="width: 18rem;" th:object="${utente}">
-                    <img th:src="*{url}" class="card-img-top" alt="200" width="200">
+                    <img id="fotoUtente" th:src="*{url}" class="card-img-top img-fixed" alt="Foto utente">
                     <div class="card-body">
                         <h5 class="card-title" th:text="*{nome}"></h5>
                         <h5 class="card-title" th:text="*{cognome}"></h5>
@@ -44,7 +45,7 @@
                                     <th class="col-4">Nome</th>
                                     <th class="col-3">Data Creazione</th>
                                     <th class="col-3">Dettaglio</th>
-                                    <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Modifica</th>
+                                    <th class="col-1">Modifica</th>
                                     <th class="col-1" sec:authorize="hasAuthority('ADMIN')">Cancella</th>
                                 </tr>
                             </thead>
@@ -55,7 +56,7 @@
                                     <td><a type="button" class="btn btn-light"
                                             th:href="@{|/idraulica/ticket/${ticket.id}|}"><i
                                                 class="bi bi-card-list"></i></a></td>
-                                    <td sec:authorize="hasAuthority('ADMIN')"><a type="button" class="btn btn-light"
+                                    <td><a type="button" class="btn btn-light"
                                             th:href="@{|/idraulica/edit/${ticket.id}|}"><i class="bi bi-pen"></i></a>
                                     </td>
                                     <td sec:authorize="hasAuthority('ADMIN')">
