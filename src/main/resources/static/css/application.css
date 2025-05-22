@@ -1,7 +1,8 @@
 #body-admin,
 #body-editTask,
 #body-dettaglioTicket,
-#body-creaTask {
+#body-creaTask,
+.body-categories {
     background-image: url('/img/Idraulica.png');
     background-size: cover;
     background-repeat: no-repeat;

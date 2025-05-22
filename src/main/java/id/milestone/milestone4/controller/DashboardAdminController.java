@@ -48,8 +48,7 @@ public class DashboardAdminController {
         }
 
         String username = principal.getName();
-        Utenti utente = utentiRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        Utenti utente = utentiRepository.findByUsername(username).get();
 
         boolean isAdmin = utente.getRuolo() != null && utente.getRuolo().getNome().equalsIgnoreCase("ADMIN");
 
@@ -84,7 +83,7 @@ public class DashboardAdminController {
     public String createNewTask(Model model) {
         model.addAttribute("ticket", new Ticket());
         model.addAttribute("tickets", ticketRepository.findAll());
-        model.addAttribute("categorie",categorieRepository.findAll());
+        model.addAttribute("categorie", categorieRepository.findAll());
         model.addAttribute("utenti", utentiRepository.findAll());
         return "/admin/creaTask";
     }
@@ -94,7 +93,8 @@ public class DashboardAdminController {
             Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("categorie",categorieRepository.findAll());
+            model.addAttribute("utenti", utentiRepository.findAll());
+            model.addAttribute("categorie", categorieRepository.findAll());
             return "/admin/creaTask";
         }
 
@@ -103,21 +103,47 @@ public class DashboardAdminController {
     }
 
     @GetMapping("/idraulica/edit/{id}")
-    public String editTask(@PathVariable("id") Integer id, Model model) {
+    public String editTask(@PathVariable("id") Integer id, Model model, Principal principal) {
+
         model.addAttribute("ticket", ticketRepository.findById(id).get());
+        model.addAttribute("categorie", categorieRepository.findAll());
+        model.addAttribute("utenti", utentiRepository.findAll());
+
+        if (principal != null) {
+            String username = principal.getName();
+            Utenti utente = utentiRepository.findByUsername(username).get();
+            model.addAttribute("utente", utente);
+        }
 
         return "/admin/editTask";
     }
 
     @PostMapping("/idraulica/edit/{id}")
-    public String updateTask(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult,
-            Model model) {
+    public String updateTask(@Valid @ModelAttribute("ticket") Ticket formTicket,BindingResult bindingResult,Model model,Principal principal) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categorie", categorieRepository.findAll());
+            model.addAttribute("utenti", utentiRepository.findAll());
             return "/admin/editTask";
         }
-        ticketRepository.save(formTicket);
 
+        String username = principal.getName();
+        Utenti utenteLoggato = utentiRepository.findByUsername(username).get();
+
+        boolean isAdmin = utenteLoggato.getRuolo().getNome().equalsIgnoreCase("ADMIN");
+
+        Ticket originale = ticketRepository.findById(formTicket.getId()).get();
+
+        if (!isAdmin) {
+            formTicket.setName(originale.getName());
+            formTicket.setDescrizione(originale.getDescrizione());
+            formTicket.setAutore(originale.getAutore());
+            formTicket.setDataCreazione(originale.getDataCreazione());
+            formTicket.setUtente(originale.getUtente());
+            formTicket.setCategorie(originale.getCategorie());
+        }
+
+        ticketRepository.save(formTicket);
         return "redirect:/idraulica";
     }
 

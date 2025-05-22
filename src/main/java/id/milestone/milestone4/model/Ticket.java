@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -39,15 +40,23 @@ public class Ticket {
     @Column(name="Data Creazione")
     private LocalDate dataCreazione;
 
-    @Column(length=1000)
-    private String note;
-
     @NotBlank
     private String stato;
 
     @ManyToOne
     @JoinColumn(name = "utente_id")
     private Utenti utente;
+
+    @OneToMany(mappedBy="ticket")
+    private List<Note> note;
+
+    public List<Note> getNote() {
+        return note;
+    }
+
+    public void setNote(List<Note> note) {
+        this.note = note;
+    }
 
     public Utenti getUtente() {
         return utente;
@@ -90,14 +99,6 @@ public class Ticket {
 
     public void setDataCreazione(LocalDate dataCreazione) {
         this.dataCreazione = dataCreazione;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 
      public String getName() {
