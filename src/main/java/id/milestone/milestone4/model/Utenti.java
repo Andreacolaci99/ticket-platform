@@ -39,6 +39,17 @@ public class Utenti {
     @JoinColumn(name = "ruolo_id")
     private Ruoli ruolo;
 
+    @Column(nullable = false)
+    private Boolean disponibile;
+
+    public Boolean getDisponibile() {
+        return disponibile;
+    }
+
+    public void setDisponibile(Boolean disponibile) {
+        this.disponibile = disponibile;
+    }
+
     public Ruoli getRuolo() {
         return ruolo;
     }
@@ -121,5 +132,7 @@ public class Utenti {
     public void setUrl(String url) {
         this.url = url;
     }
+
+
 
 }

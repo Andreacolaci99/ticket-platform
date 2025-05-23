@@ -2,7 +2,8 @@
 #body-editTask,
 #body-dettaglioTicket,
 #body-creaTask,
-.body-categories {
+.body-categories,
+#note {
     background-image: url('/img/Idraulica.png');
     background-size: cover;
     background-repeat: no-repeat;

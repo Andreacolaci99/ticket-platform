@@ -39,10 +39,6 @@ public class NoteController {
     public String creaNota(@Valid @ModelAttribute("note") Note formNote, BindingResult bindingResult,
             Model model) {
 
-     /*    if (formNote.getTicket() == null) {
-            bindingResult.rejectValue("ticket", "error.note", "La nota deve essere associata a un ticket.");
-        }*/
-
         if (bindingResult.hasErrors()) {
             model.addAttribute("editMode", false);
             return "/admin/categorie/note";
@@ -50,7 +46,7 @@ public class NoteController {
 
         noteRepository.save(formNote);
 
-        return "redirect:/idraulica/ticket/" + formNote.getTicket().getId();
+        return "redirect:/idraulica/edit/" + formNote.getTicket().getId();
     }
 
     @GetMapping("/edit/{id}")
@@ -60,7 +56,7 @@ public class NoteController {
         model.addAttribute("note", note);
         model.addAttribute("editMode", true);
 
-        return "/dettaglioTicket/";
+        return "/editTask/";
     }
 
     @PostMapping("/edit/{id}")

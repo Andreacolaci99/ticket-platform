@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,7 +48,7 @@ public class Ticket {
     @JoinColumn(name = "utente_id")
     private Utenti utente;
 
-    @OneToMany(mappedBy="ticket")
+    @OneToMany(mappedBy="ticket",cascade = CascadeType.REMOVE)
     private List<Note> note;
 
     public List<Note> getNote() {

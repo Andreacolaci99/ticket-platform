@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import id.milestone.milestone4.model.Ticket;
 import id.milestone.milestone4.model.Utenti;
@@ -84,7 +85,7 @@ public class DashboardAdminController {
         model.addAttribute("ticket", new Ticket());
         model.addAttribute("tickets", ticketRepository.findAll());
         model.addAttribute("categorie", categorieRepository.findAll());
-        model.addAttribute("utenti", utentiRepository.findAll());
+        model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
         return "/admin/creaTask";
     }
 
@@ -107,7 +108,7 @@ public class DashboardAdminController {
 
         model.addAttribute("ticket", ticketRepository.findById(id).get());
         model.addAttribute("categorie", categorieRepository.findAll());
-        model.addAttribute("utenti", utentiRepository.findAll());
+        model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
 
         if (principal != null) {
             String username = principal.getName();
@@ -119,7 +120,8 @@ public class DashboardAdminController {
     }
 
     @PostMapping("/idraulica/edit/{id}")
-    public String updateTask(@Valid @ModelAttribute("ticket") Ticket formTicket,BindingResult bindingResult,Model model,Principal principal) {
+    public String updateTask(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult,
+            Model model, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorie", categorieRepository.findAll());
@@ -151,6 +153,31 @@ public class DashboardAdminController {
     public String deleteTask(@PathVariable("id") Integer id) {
 
         ticketRepository.deleteById(id);
+        return "redirect:/idraulica";
+    }
+
+    @PostMapping("/utenti/{id}/toggleDisponibilita")
+    public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,
+            Model model, RedirectAttributes redirectAttributes) {
+        Utenti utente = utentiRepository.findById(id).get();
+
+        if (!disponibile) {
+            boolean tuttiCompletati = true;
+
+            for (Ticket t : utente.getTickets()) {
+                if (!t.getStato().equalsIgnoreCase("COMPLETATO")) {
+                    tuttiCompletati = false;
+                    break;
+                }
+            }
+
+            if (!tuttiCompletati) {
+                redirectAttributes.addFlashAttribute("messaggio","Non puoi renderti non disponibile: hai ticket ancora attivi.");
+                return "redirect:/idraulica";
+            }
+        }
+        utente.setDisponibile(disponibile);
+        utentiRepository.save(utente);
         return "redirect:/idraulica";
     }
 
