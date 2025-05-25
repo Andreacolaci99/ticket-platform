@@ -91,10 +91,10 @@ public class DashboardAdminController {
 
     @PostMapping("/idraulica/create")
     public String postCreate(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult,
-            Model model) {
+            Model model, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("utenti", utentiRepository.findAll());
+            model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
             model.addAttribute("categorie", categorieRepository.findAll());
             return "/admin/creaTask";
         }
@@ -157,8 +157,7 @@ public class DashboardAdminController {
     }
 
     @PostMapping("/utenti/{id}/toggleDisponibilita")
-    public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,
-            Model model, RedirectAttributes redirectAttributes) {
+    public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,Model model, RedirectAttributes redirectAttributes) {
         Utenti utente = utentiRepository.findById(id).get();
 
         if (!disponibile) {

@@ -6,4 +6,5 @@ import id.milestone.milestone4.model.Categorie;
 
 public interface CategorieRepository extends JpaRepository<Categorie, Integer>{
 
+
 }

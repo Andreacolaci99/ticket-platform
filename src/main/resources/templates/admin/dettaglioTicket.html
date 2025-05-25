@@ -32,8 +32,7 @@
 
                     <p>
                         <i class="bi bi-person-fill"></i>
-                        <span th:if="${ticket.utente != null}" th:text="|Assegnata a: ${ticket.utente.nome} ${ticket.utente.cognome}|"></span>
-                        <span th:if="${ticket.utente == null}">Assegnata a: <em>Nessun utente</em></span>
+                        <span th:text="|Assegnata a: ${ticket.utente.nome} ${ticket.utente.cognome}|"></span>
                     </p>
 
                     <hr />
@@ -43,7 +42,7 @@
                             <strong th:text="${nota.autore}"></strong> - <span th:text="${nota.campoTesto}"></span>
                             <small class="text-muted" th:text="|(${nota.dataCreazione})|"></small>
                         </li>
-                        <li class="list-group-item" th:if="${ticket.note == null or ticket.note.isEmpty()}">
+                        <li class="list-group-item" th:if="${ticket.note.isEmpty()}">
                             Nessuna nota presente.
                         </li>
                     </ul>
@@ -53,7 +52,7 @@
                     <h5 class="text-secondary">Categorie</h5>
                     <ul class="list-group">
                         <li class="list-group-item" th:each="cat : ${ticket.categorie}" th:text="${cat.nome}"></li>
-                        <li class="list-group-item" th:if="${ticket.categorie == null or ticket.categorie.isEmpty()}">
+                        <li class="list-group-item" th:if="${ticket.categorie.isEmpty()}">
                             Nessuna categoria associata.
                         </li>
                     </ul>

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,11 +47,18 @@ public class Ticket {
     private String stato;
 
     @ManyToOne
+    @NotNull(message="Inserire un operatore !! Se non ci sono operatori disponibili la task non può essere creata")
+    @JsonBackReference
     @JoinColumn(name = "utente_id")
     private Utenti utente;
 
     @OneToMany(mappedBy="ticket",cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private List<Note> note;
+
+    @ManyToMany
+    @JsonBackReference
+    private List<Categorie> categorie;
 
     public List<Note> getNote() {
         return note;
@@ -66,9 +75,6 @@ public class Ticket {
     public void setUtente(Utenti utente) {
         this.utente = utente;
     }
-
-    @ManyToMany
-    private List<Categorie> categorie;
 
     public List<Categorie> getCategorie() {
         return categorie;

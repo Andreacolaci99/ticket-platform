@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -59,6 +61,7 @@ public class Utenti {
     }
 
     @OneToMany(mappedBy = "utente")
+    @JsonBackReference
     private List<Ticket> tickets;
 
     private String url;

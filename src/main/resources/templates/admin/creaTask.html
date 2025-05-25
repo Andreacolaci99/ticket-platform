@@ -16,7 +16,7 @@
 
     <div class="container mt-5">
         <div class="card shadow p-4">
-            <h2 class="text-primary mb-4">Crea un nuovo Task</h2>
+            <h2 class="text-primary mb-4">Crea una nuova Task</h2>
 
             <form id="ticket-form" th:object="${ticket}" th:action="@{/idraulica/create}" method="post">
                 <div class="row">
@@ -31,9 +31,11 @@
 
                         <div class="mb-3">
                             <label class="form-label">Descrizione</label>
-                            <textarea class="form-control" rows="3" th:field="*{descrizione}" th:errorClass="is-invalid"></textarea>
+                            <textarea class="form-control" rows="3" th:field="*{descrizione}"
+                                th:errorClass="is-invalid"></textarea>
                             <ul th:if="${#fields.hasErrors('descrizione')}">
-                                <li th:each="err : ${#fields.errors('descrizione')}" class="text-danger" th:text="${err}"></li>
+                                <li th:each="err : ${#fields.errors('descrizione')}" class="text-danger"
+                                    th:text="${err}"></li>
                             </ul>
                         </div>
 
@@ -41,7 +43,8 @@
                             <label class="form-label">Autore</label>
                             <input type="text" class="form-control" th:field="*{autore}" th:errorClass="is-invalid">
                             <ul th:if="${#fields.hasErrors('autore')}">
-                                <li th:each="err : ${#fields.errors('autore')}" class="text-danger" th:text="${err}"></li>
+                                <li th:each="err : ${#fields.errors('autore')}" class="text-danger" th:text="${err}">
+                                </li>
                             </ul>
                         </div>
 
@@ -51,12 +54,20 @@
                                 <option value="">Seleziona un utente</option>
                                 <option th:each="utente : ${utenti}" th:value="${utente.id}"
                                     th:text="${utente.nome + ' ' + utente.cognome}"></option>
+                                <option value="" th:if="${utenti.isEmpty()}" disabled>
+                                    Non ci sono operatori disponibili
+                                </option>
                             </select>
+                            <ul th:if="${#fields.hasErrors('utente')}">
+                                <li th:each="err : ${#fields.errors('utente')}" class="text-danger" th:text="${err}">
+                                </li>
+                            </ul>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Data Creazione</label>
-                            <input type="date" class="form-control" th:field="*{dataCreazione}" th:errorClass="is-invalid">
+                            <input type="date" class="form-control" th:field="*{dataCreazione}"
+                                th:errorClass="is-invalid">
                             <div th:if="${#fields.hasErrors('dataCreazione')}" class="invalid-feedback d-block">
                                 <ul>
                                     <li th:each="err : ${#fields.errors('dataCreazione')}" th:text="${err}"></li>

@@ -15,4 +15,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
     List<Ticket> findByNameContainingIgnoreCase(String name);
 
+    List<Ticket> findByCategorieNomeIgnoreCase(String nomeCategoria);
+
+    List<Ticket> findByStatoIgnoreCase(String stato);
+
 }
