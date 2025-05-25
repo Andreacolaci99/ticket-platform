@@ -25,7 +25,7 @@ public class Note {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message="Inserire autore")
     private String autore;
 
     @NotNull(message="Inserire una data valida")
@@ -33,7 +33,7 @@ public class Note {
     @Column(name="Data Creazione")
     private LocalDate dataCreazione;
  
-    @NotBlank
+    @NotBlank(message="Descrizione obbligatoria")
     @Column(length=2500)
     private String campoTesto;
 

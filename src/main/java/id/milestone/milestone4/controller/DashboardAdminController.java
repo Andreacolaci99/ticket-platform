@@ -44,14 +44,10 @@ public class DashboardAdminController {
     public String homeAdmin(Model model, @RequestParam(name = "keyword", required = false) String name,
             Principal principal) {
 
-        if (principal == null) {
-            return "redirect:/login";
-        }
-
         String username = principal.getName();
         Utenti utente = utentiRepository.findByUsername(username).get();
 
-        boolean isAdmin = utente.getRuolo() != null && utente.getRuolo().getNome().equalsIgnoreCase("ADMIN");
+        boolean isAdmin = utente.getRuolo().getNome().equalsIgnoreCase("ADMIN");
 
         List<Ticket> listaTicket;
 
@@ -83,7 +79,6 @@ public class DashboardAdminController {
     @GetMapping("/idraulica/create")
     public String createNewTask(Model model) {
         model.addAttribute("ticket", new Ticket());
-        model.addAttribute("tickets", ticketRepository.findAll());
         model.addAttribute("categorie", categorieRepository.findAll());
         model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
         return "/admin/creaTask";
@@ -91,7 +86,7 @@ public class DashboardAdminController {
 
     @PostMapping("/idraulica/create")
     public String postCreate(@Valid @ModelAttribute("ticket") Ticket formTicket, BindingResult bindingResult,
-            Model model, RedirectAttributes redirectAttributes) {
+            Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
@@ -106,15 +101,12 @@ public class DashboardAdminController {
     @GetMapping("/idraulica/edit/{id}")
     public String editTask(@PathVariable("id") Integer id, Model model, Principal principal) {
 
+        String username = principal.getName();
+        Utenti utente = utentiRepository.findByUsername(username).get();
+        model.addAttribute("utente", utente);
         model.addAttribute("ticket", ticketRepository.findById(id).get());
         model.addAttribute("categorie", categorieRepository.findAll());
         model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
-
-        if (principal != null) {
-            String username = principal.getName();
-            Utenti utente = utentiRepository.findByUsername(username).get();
-            model.addAttribute("utente", utente);
-        }
 
         return "/admin/editTask";
     }
@@ -157,7 +149,8 @@ public class DashboardAdminController {
     }
 
     @PostMapping("/utenti/{id}/toggleDisponibilita")
-    public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,Model model, RedirectAttributes redirectAttributes) {
+    public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,
+            Model model, RedirectAttributes redirectAttributes) {
         Utenti utente = utentiRepository.findById(id).get();
 
         if (!disponibile) {
@@ -171,7 +164,8 @@ public class DashboardAdminController {
             }
 
             if (!tuttiCompletati) {
-                redirectAttributes.addFlashAttribute("messaggio","Non puoi renderti non disponibile: hai ticket ancora attivi.");
+                redirectAttributes.addFlashAttribute("messaggio",
+                        "Non puoi renderti non disponibile: hai ticket ancora attivi.");
                 return "redirect:/idraulica";
             }
         }

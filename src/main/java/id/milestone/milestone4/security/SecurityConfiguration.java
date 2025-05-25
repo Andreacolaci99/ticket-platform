@@ -25,7 +25,8 @@ public class SecurityConfiguration {
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .and().exceptionHandling()
+                .and().csrf().disable();
 
         return http.build();
     }
