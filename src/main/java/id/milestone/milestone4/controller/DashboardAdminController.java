@@ -117,7 +117,7 @@ public class DashboardAdminController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categorie", categorieRepository.findAll());
-            model.addAttribute("utenti", utentiRepository.findAll());
+            model.addAttribute("utenti", utentiRepository.findByDisponibileTrue());
             return "/admin/editTask";
         }
 
@@ -151,6 +151,7 @@ public class DashboardAdminController {
     @PostMapping("/utenti/{id}/toggleDisponibilita")
     public String toggleDisponibilita(@PathVariable Integer id, @RequestParam("disponibile") boolean disponibile,
             Model model, RedirectAttributes redirectAttributes) {
+                
         Utenti utente = utentiRepository.findById(id).get();
 
         if (!disponibile) {

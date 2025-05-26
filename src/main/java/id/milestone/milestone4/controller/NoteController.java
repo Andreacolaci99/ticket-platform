@@ -48,35 +48,4 @@ public class NoteController {
 
         return "redirect:/idraulica/edit/" + formNote.getTicket().getId();
     }
-
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable Integer id, Model model) {
-
-        Note note = noteRepository.findById(id).get();
-        model.addAttribute("note", note);
-        model.addAttribute("editMode", true);
-
-        return "/editTask/";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String doEdit(@Valid @ModelAttribute("note") Note note, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("editMode", true);
-            model.addAttribute("note", note);
-            return "pizzeria/offerte/edit";
-        }
-        noteRepository.save(note);
-        return "redirect:/dettaglioTicket/" + note.getTicket().getId();
-    }
-
-    @PostMapping("/delete/{id}")
-    public String deleteNota(@PathVariable("id") Integer id) {
-        Note note = noteRepository.findById(id).get();
-        Integer ticketId = note.getTicket().getId();
-
-        noteRepository.deleteById(id);
-        return "redirect:/dettaglioTicket/" + ticketId;
-    }
 }
